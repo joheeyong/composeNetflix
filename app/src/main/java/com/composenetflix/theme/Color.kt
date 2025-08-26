@@ -1,4 +1,4 @@
-package com.domeggook.composenetflix.ui.theme
+package com.composenetflix.theme
 
 import androidx.compose.ui.graphics.Color
 

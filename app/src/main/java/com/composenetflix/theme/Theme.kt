@@ -1,4 +1,4 @@
-package com.domeggook.composenetflix.ui.theme
+package com.composenetflix.theme
 
 import android.app.Activity
 import android.os.Build
