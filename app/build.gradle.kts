@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -20,12 +22,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // TMDB API 관련 BuildConfig 상수 주입
-        buildConfigField(
-            "String",
-            "TMDB_API_KEY",
-            "\"${project.findProperty("TMDB_API_KEY") ?: ""}\""
-        )
+        val localProps = gradleLocalProperties(rootDir, providers)
+        val tmdbBearer = localProps.getProperty("TMDB_BEARER") ?: ""
+
         buildConfigField("String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\"")
+        buildConfigField("String", "TMDB_BEARER", "\"$tmdbBearer\"")
     }
 
     buildTypes {
@@ -84,4 +85,17 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Navigation for Compose
+    implementation(libs.androidx.navigation.compose)
+
+    // Hilt + Navigation
+    implementation(libs.hilt.navigation.compose)
+
+    // ViewModel + viewModelScope
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // 이미지 로딩
+    implementation(libs.coil.compose)
 }

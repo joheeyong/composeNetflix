@@ -3,41 +3,44 @@ package com.composenetflix
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                Scaffold { padding ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        JetflixTitle()
-                    }
+                val navController = rememberNavController()
+                AppNavHost(navController = navController)
                 }
             }
         }
     }
+
+sealed class Screen(val route: String) {
+    data object Home : Screen("home")
 }
 
 @Composable
-fun JetflixTitle() {
-    Text(
-        text = "Jetflix Clone",
-        fontSize = 28.sp,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.padding(16.dp)
-    )
+fun AppNavHost(
+    navController: NavHostController,
+    startDestination: String = Screen.Home.route
+) {
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable(Screen.Home.route) {
+            val vm: HomeViewModel = hiltViewModel()
+            HomeScreen(viewModel = vm)
+        }
+    }
 }

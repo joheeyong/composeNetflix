@@ -30,16 +30,16 @@ object NetworkModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-        val apiKeyInterceptor = Interceptor { chain ->
-            val url = chain.request().url.newBuilder()
-                .addQueryParameter("api_key", BuildConfig.TMDB_API_KEY)
+        val authInterceptor = Interceptor { chain ->
+            val newRequest = chain.request().newBuilder()
+                .addHeader("Authorization", "Bearer ${BuildConfig.TMDB_BEARER}")
+                .addHeader("Accept", "application/json")
                 .build()
-            val newRequest = chain.request().newBuilder().url(url).build()
             chain.proceed(newRequest)
         }
 
         return OkHttpClient.Builder()
-            .addInterceptor(apiKeyInterceptor)
+            .addInterceptor(authInterceptor)
             .addInterceptor(logging)
             .build()
     }
