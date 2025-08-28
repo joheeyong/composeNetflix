@@ -98,4 +98,8 @@ dependencies {
 
     // 이미지 로딩
     implementation(libs.coil.compose)
+
+    // Paging3
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 }
